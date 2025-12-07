@@ -1,10 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import axios from 'axios';
+
 
 function App() {
   const [count, setCount] = useState(0)
+  const [array, setArray] = useState([]);
+
+  const fetchAPI = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/app');
+    console.log("응답 성공:", response.data.fruits);
+    setArray(response.data.fruits);
+  } catch (error) {
+    console.error("API 요청 실패:", error.message);
+  }
+};
+
+
+  useEffect(() => {
+    console.log("Fetching data from API...");
+    fetchAPI();
+  }, []);
 
   return (
     <>
@@ -24,6 +43,13 @@ function App() {
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
+        {
+          array.map((fruit, index) => (
+            <div key={index}>
+              <p>{fruit}</p>
+              </div>
+          ))
+        }
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
